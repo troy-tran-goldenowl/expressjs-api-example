@@ -14,7 +14,7 @@ exports.listPost = async (req, res, next) => {
 
     res.json({
       message: 'Successfully',
-      post: postCollectionSerializer(posts),
+      posts: postCollectionSerializer(posts),
       totalPosts,
     });
   } catch (error) {
