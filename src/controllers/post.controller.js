@@ -54,3 +54,24 @@ exports.editPost = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.deletePost = async (req, res, next) => {
+  try {
+    const filter = { _id: req.params.id };
+    const post = await Post.findOneAndRemove(filter);
+    if (!post) {
+      throw new APIError({
+        status: httpStatus.NOT_FOUND,
+        message: 'Post not found',
+      });
+    }
+
+    const response = {
+      message: 'Post successfully deleted',
+      id: req.params.id,
+    };
+    res.status(200).send(response);
+  } catch (error) {
+    next(error);
+  }
+};

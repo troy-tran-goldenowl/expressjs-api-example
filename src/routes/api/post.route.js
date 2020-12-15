@@ -16,6 +16,7 @@ router.route('/')
 // GET /api/posts/:id
 router.route('/:id')
   .get(postController.showPost)
-  .put(postController.editPost);
+  .put(postController.editPost)
+  .delete(postController.deletePost);
 
 module.exports = router;
