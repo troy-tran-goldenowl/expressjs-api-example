@@ -1,11 +1,10 @@
 const httpStatus = require('http-status');
-const APIError = require('../utils/APIError');
 const Post = require('../models/post.model');
 const { postSerializer, postCollectionSerializer } = require('../serializers/post.serializer');
 
 exports.listPost = async (req, res, next) => {
   try {
-    const { page } = req.query;
+    const page = Number(req.query.page) || 1;
     const perPage = 5;
     const totalPosts = await Post.countDocuments();
     const posts = await Post.find()
@@ -13,9 +12,8 @@ exports.listPost = async (req, res, next) => {
       .limit(perPage);
 
     res.json({
-      message: 'Successfully',
       posts: postCollectionSerializer(posts),
-      totalPosts,
+      meta: { totalPosts },
     });
   } catch (error) {
     next(error);
@@ -27,7 +25,7 @@ exports.createPost = async (req, res, next) => {
     const post = new Post(req.body);
     const savedPost = await post.save();
 
-    res.json(postSerializer(savedPost));
+    res.status(httpStatus.CREATED).json({ post: postSerializer(savedPost) });
   } catch (error) {
     next(error);
   }
@@ -36,13 +34,8 @@ exports.createPost = async (req, res, next) => {
 exports.showPost = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
+    Post.checkIsValid(post);
 
-    if (!post) {
-      throw new APIError({
-        status: httpStatus.NOT_FOUND,
-        message: 'Post not found',
-      });
-    }
     res.json(postSerializer(post));
   } catch (error) {
     next(error);
@@ -53,7 +46,9 @@ exports.editPost = async (req, res, next) => {
   try {
     const filter = { _id: req.params.id };
     const post = await Post.findOneAndUpdate(filter, req.body, { new: true });
-    res.json(postSerializer(post));
+    Post.checkIsValid(post);
+
+    res.json({ post: postSerializer(post) });
   } catch (error) {
     next(error);
   }
@@ -63,18 +58,9 @@ exports.deletePost = async (req, res, next) => {
   try {
     const filter = { _id: req.params.id };
     const post = await Post.findOneAndRemove(filter);
-    if (!post) {
-      throw new APIError({
-        status: httpStatus.NOT_FOUND,
-        message: 'Post not found',
-      });
-    }
+    Post.checkIsValid(post);
 
-    const response = {
-      message: 'Post successfully deleted',
-      id: req.params.id,
-    };
-    res.status(200).send(response);
+    res.status(httpStatus.NO_CONTENT).send();
   } catch (error) {
     next(error);
   }

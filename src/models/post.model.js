@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const httpStatus = require('http-status');
+const APIError = require('../utils/APIError');
 
 /**
  * Schema
@@ -28,6 +30,12 @@ postSchema.method({});
 /**
  * Statics
  */
-postSchema.statics = {};
+postSchema.statics.checkIsValid = function (post) {
+  if (post) return post;
+  throw new APIError({
+    status: httpStatus.NOT_FOUND,
+    message: 'Post not found',
+  });
+};
 
 module.exports = mongoose.model('Post', postSchema);
