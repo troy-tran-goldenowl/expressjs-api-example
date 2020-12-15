@@ -15,6 +15,7 @@ router.route('/')
 
 // GET /api/posts/:id
 router.route('/:id')
-  .get(postController.showPost);
+  .get(postController.showPost)
+  .put(postController.editPost);
 
 module.exports = router;

@@ -38,3 +38,19 @@ exports.showPost = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.editPost = async (req, res, next) => {
+  try {
+    const filter = { _id: req.params.id };
+    const update = Object.entries(req.body)
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+
+    const post = await Post.findOneAndUpdate(filter, update, { new: true });
+    res.json(postSerializer(post));
+  } catch (error) {
+    next(error);
+  }
+};
