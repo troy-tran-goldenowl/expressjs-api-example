@@ -5,8 +5,18 @@ const { postSerializer, postCollectionSerializer } = require('../serializers/pos
 
 exports.listPost = async (req, res, next) => {
   try {
-    const posts = await Post.find();
-    res.json(postCollectionSerializer(posts));
+    const { page } = req.query;
+    const perPage = 5;
+    const totalPosts = await Post.countDocuments();
+    const posts = await Post.find()
+      .skip((page - 1) * perPage)
+      .limit(perPage);
+
+    res.json({
+      message: 'Successfully',
+      post: postCollectionSerializer(posts),
+      totalPosts,
+    });
   } catch (error) {
     next(error);
   }
