@@ -12,7 +12,7 @@ exports.signup = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = await new User({ username, password: hashedPassword }).save();
 
-    res.json({ user: userSerializer(newUser) });
+    res.status(httpStatus.CREATED).json({ user: userSerializer(newUser) });
   } catch (error) {
     next(error);
   }
