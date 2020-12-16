@@ -37,7 +37,9 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    res.json({ user: userSerializer(user) });
+    const token = user.generateToken();
+
+    res.json({ user: userSerializer(user), token });
   } catch (error) {
     next(error);
   }
