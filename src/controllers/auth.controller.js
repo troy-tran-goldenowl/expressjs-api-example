@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const User = require('../models/user.model');
-const { userSerializer } = require('../serializers/user.serializer');
+const { userAuthSerializer, userSerializer } = require('../serializers/user.serializer');
 const APIError = require('../utils/APIError');
 
 exports.signup = async (req, res, next) => {
@@ -45,7 +45,7 @@ exports.login = async (req, res, next) => {
 
     const token = user.generateToken();
 
-    res.json({ user: userSerializer(user), token });
+    res.json({ user: userAuthSerializer(user, token) });
   } catch (error) {
     next(error);
   }
