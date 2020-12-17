@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 const APIError = require('../utils/APIError');
-const config = require('../config/vars');
 
 module.exports = (req, res, next) => {
   try {
@@ -14,7 +13,7 @@ module.exports = (req, res, next) => {
     }
 
     const headerToken = headerAuthorization.split(' ')[1];
-    const decodedToken = jwt.verify(headerToken, config.token.secretKey);
+    const decodedToken = jwt.verify(headerToken, process.env.TOKEN_SECRET_KEY);
 
     if (!decodedToken) {
       throw new APIError({
