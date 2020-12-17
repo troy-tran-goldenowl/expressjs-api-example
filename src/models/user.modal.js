@@ -27,13 +27,7 @@ userSchema.methods.generateToken = function () {
 
 userSchema.statics.checkIsExists = async function (username) {
   const user = await this.findOne({ username });
-
-  if (user) {
-    throw new APIError({
-      message: 'User already exists!',
-      status: httpStatus.UNPROCESSABLE_ENTITY,
-    });
-  }
+  return !!user;
 };
 
 module.exports = mongoose.model('User', userSchema);

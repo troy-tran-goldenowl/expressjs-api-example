@@ -7,7 +7,14 @@ const APIError = require('../utils/APIError');
 exports.signup = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    await User.checkIsExists(username);
+    const isUserAlreadyExists = await User.checkIsExists(username);
+
+    if (isUserAlreadyExists) {
+      throw new APIError({
+        message: 'User already exists!',
+        status: httpStatus.UNPROCESSABLE_ENTITY,
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = await new User({ username, password: hashedPassword }).save();
