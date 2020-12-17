@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -26,6 +27,11 @@ userSchema.methods.generateToken = function () {
 userSchema.statics.checkIsExists = async function (username) {
   const user = await this.findOne({ username });
   return !!user;
+};
+
+userSchema.statics.hashPassword = async function (password) {
+  const hashedPassword = await bcrypt.hash(password, 12);
+  return hashedPassword;
 };
 
 module.exports = mongoose.model('User', userSchema);
