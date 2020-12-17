@@ -24,6 +24,12 @@ userSchema.methods.generateToken = function () {
   return token;
 };
 
+userSchema.methods.comparePassword = async function (password) {
+  const isEqualPassword = await bcrypt.compare(password, this.password);
+  return isEqualPassword;
+};
+
+// Static methods
 userSchema.statics.checkIsExists = async function (username) {
   const user = await this.findOne({ username });
   return !!user;

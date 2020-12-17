@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const httpStatus = require('http-status');
 const User = require('../models/user.model');
 const { userSerializer } = require('../serializers/user.serializer');
@@ -31,15 +30,15 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ username });
     if (!user) {
       throw new APIError({
-        message: 'User not found',
+        message: 'Invalid username or password',
         status: httpStatus.NOT_FOUND,
       });
     }
 
-    const isEqualPassword = await bcrypt.compare(password, user.password);
+    const isEqualPassword = await user.comparePassword(password);
     if (!isEqualPassword) {
       throw new APIError({
-        message: 'Wrong password!',
+        message: 'Invalid username or password',
         status: httpStatus.NOT_FOUND,
       });
     }
