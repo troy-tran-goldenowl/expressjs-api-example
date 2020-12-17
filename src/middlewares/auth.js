@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 const APIError = require('../utils/APIError');
+const config = require('../config/vars');
 
 exports.authMiddleware = (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ exports.authMiddleware = (req, res, next) => {
     }
 
     const headerToken = headerAuthorization.split(' ')[1];
-    const decodedToken = jwt.verify(headerToken, process.env.TOKEN_SECRET_KEY);
+    const decodedToken = jwt.verify(headerToken, config.token.secretKey);
 
     if (!decodedToken) {
       throw new APIError({
