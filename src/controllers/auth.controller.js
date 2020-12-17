@@ -50,3 +50,19 @@ exports.login = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      throw new APIError({
+        message: 'User not found',
+        status: httpStatus.NOT_FOUND,
+      });
+    }
+
+    res.json({ user: userSerializer(user) });
+  } catch (error) {
+    next(error);
+  }
+};

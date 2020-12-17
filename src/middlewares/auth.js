@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 const APIError = require('../utils/APIError');
 
-module.exports = (req, res, next) => {
+exports.authMiddleware = (req, res, next) => {
   try {
     const headerAuthorization = req.get('Authorization');
     if (!headerAuthorization) {
