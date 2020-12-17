@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
-const APIError = require('../utils/APIError');
 
 const userSchema = new mongoose.Schema({
   username: {

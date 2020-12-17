@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const httpStatus = require('http-status');
-const User = require('../models/user.modal');
+const User = require('../models/user.model');
 const { userSerializer } = require('../serializers/user.serializer');
 const APIError = require('../utils/APIError');
 
